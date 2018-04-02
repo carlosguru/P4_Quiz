@@ -42,7 +42,7 @@ exports.listCmd= (socket,rl) =>{
 /**
  * Devuelve una promesa
  */
-const validateId = id => {
+const validateId = (socket, id) => {
 
     return new Sequelize.Promise((resolve, reject) => {
         if (typeof id === "undefined"){
@@ -80,7 +80,7 @@ exports.showCmd = (socket, rl,id) =>{
 };
 
 
-const makeQuestion = (rl,text) => {
+const makeQuestion = (socket, rl,text) => {
     return new Sequelize.Promise((resolve, reject) => {
         rl.question(colorize(text, 'red'), answer => {
             resolve(answer.trim());
@@ -234,10 +234,10 @@ exports.playCmd = (socket, rl) => {
                 .then(a => {
                     if(a.toLowerCase().trim() === quiz.answer.toLowerCase().trim() ){
                         score++;
-                        console.log('CORRECTO.\nLleva ',score, 'aciertos');
+                        console.log(socket, 'CORRECTO.\nLleva ',score, 'aciertos');
                         resolve(playOne());
                     }else{
-                        console.log("INCORRECTO.\nFin del juego. Aciertos: ");
+                        console.log(socket, "INCORRECTO.\nFin del juego. Aciertos: ");
                         resolve();
                     }
         });
@@ -253,7 +253,7 @@ exports.playCmd = (socket, rl) => {
         return playOne();
 })
 .catch(error => {
-        console.log(error);
+        console.log(socket, error);
 })
 .then(() => {
         biglog(socket, `${score}`,'magenta');
